@@ -1,0 +1,34 @@
+flowchart LR
+  user["Usuario de negocio"]
+  chat["Google Chat\nFinance AI POC"]
+  run["Cloud Run\nChat Adapter"]
+  adk["ADK Agent\nFinanceiro"]
+  vertex["Vertex AI\nGemini"]
+  validator["SQL Validator\nAllowlist + Dry Run"]
+  bq["BigQuery\nViews Financeiras"]
+  chart["Chart Tool\nPNG com matplotlib"]
+  storage["Cloud Storage\nGraficos PNG"]
+  logs["Cloud Logging\nAuditoria tecnica"]
+  status["Status atual\nChat + BI Agent validados"]
+
+  user -->|"pergunta em linguagem natural"| chat
+  chat -->|"evento HTTP POST"| run
+  run -->|"mensagem + usuario + sessao"| adk
+  adk -->|"raciocinio e geracao SQL"| vertex
+  adk -->|"consulta controlada"| validator
+  validator -->|"SELECT validado"| bq
+  bq -->|"resultado tabular"| validator
+  validator -->|"linhas + SQL executado"| adk
+  adk -->|"pedido de grafico"| chart
+  chart -->|"consulta segura"| validator
+  chart -->|"upload PNG"| storage
+  storage -->|"URL do grafico"| chart
+  chart -->|"link + resumo"| adk
+  adk -->|"resposta em portugues"| run
+  run -->|"JSON { text }"| chat
+  chat -->|"resposta final"| user
+
+  run -.->|"logs e erros"| logs
+  validator -.->|"bytes estimados e status"| logs
+  chart -.->|"url e status"| logs
+  status -.->|"texto, multiplas perguntas e graficos"| run
