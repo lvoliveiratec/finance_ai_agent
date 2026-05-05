@@ -1,0 +1,7 @@
+fastapi
+uvicorn[standard]
+google-adk
+google-cloud-bigquery
+google-cloud-storage
+matplotlib
+PyYAML
