@@ -1,0 +1,24 @@
+{
+  "type": "MESSAGE",
+  "message": {
+    "text": "Qual foi a receita realizada por mes?",
+    "argumentText": "Qual foi a receita realizada por mes?",
+    "sender": {
+      "name": "users/test-user",
+      "email": "usuario.teste@empresa.com"
+    },
+    "space": {
+      "name": "spaces/test-space"
+    },
+    "thread": {
+      "name": "spaces/test-space/threads/test-thread"
+    }
+  },
+  "space": {
+    "name": "spaces/test-space"
+  },
+  "user": {
+    "name": "users/test-user",
+    "email": "usuario.teste@empresa.com"
+  }
+}
