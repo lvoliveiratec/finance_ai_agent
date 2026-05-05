@@ -1,0 +1,132 @@
+dominio: financeiro
+projeto: hml-data-clean
+dataset: poc_financeiro
+
+views_permitidas:
+  vw_resultado_mensal:
+    tabela: hml-data-clean.poc_financeiro.vw_resultado_mensal
+    descricao: Resultado financeiro realizado por mes, grupo e categoria.
+    campos:
+      mes: Mes de referencia do lancamento.
+      grupo: Classificacao principal da conta, como Receita ou Despesa.
+      categoria: Categoria financeira da conta contabil.
+      valor_realizado: Valor total realizado no periodo.
+    usos:
+      - receita por mes
+      - despesa por mes
+      - resultado financeiro por mes
+
+  vw_despesa_por_centro_custo:
+    tabela: hml-data-clean.poc_financeiro.vw_despesa_por_centro_custo
+    descricao: Despesas realizadas por mes, centro de custo, area, unidade e categoria.
+    campos:
+      mes: Mes de referencia da despesa.
+      centro_custo: Nome do centro de custo.
+      area: Area do centro de custo.
+      unidade: Unidade geografica ou operacional.
+      categoria: Categoria financeira da despesa.
+      valor_despesa: Valor total da despesa realizada.
+    usos:
+      - despesa por centro de custo
+      - despesa por area
+      - despesa por unidade
+      - despesa por categoria
+
+  vw_realizado_vs_orcado:
+    tabela: hml-data-clean.poc_financeiro.vw_realizado_vs_orcado
+    descricao: Comparativo entre valor realizado e valor orcado por mes, centro de custo, area, unidade, grupo e categoria.
+    campos:
+      mes: Mes de referencia.
+      centro_custo: Nome do centro de custo.
+      area: Area do centro de custo.
+      unidade: Unidade geografica ou operacional.
+      grupo: Receita ou Despesa.
+      categoria: Categoria financeira.
+      valor_realizado: Valor realizado no periodo.
+      valor_orcado: Valor orcado no periodo.
+      variacao_valor: Diferenca entre realizado e orcado.
+    usos:
+      - realizado versus orcado
+      - categorias acima do orcado
+      - variacao de orcamento
+
+  vw_fornecedores_despesas:
+    tabela: hml-data-clean.poc_financeiro.vw_fornecedores_despesas
+    descricao: Despesas realizadas por fornecedor, mes, centro de custo e categoria.
+    campos:
+      mes: Mes de referencia da despesa.
+      fornecedor: Nome do fornecedor ou parceiro.
+      centro_custo: Nome do centro de custo.
+      categoria: Categoria financeira da despesa.
+      valor_despesa: Valor total gasto com o fornecedor.
+    usos:
+      - ranking de fornecedores
+      - gasto por fornecedor
+      - fornecedores por categoria
+
+metricas:
+  receita_realizada:
+    descricao: Soma dos valores realizados classificados como Receita.
+    view_recomendada: vw_resultado_mensal
+    regra: SUM(valor_realizado) WHERE grupo = 'Receita'
+
+  despesa_realizada:
+    descricao: Soma dos valores realizados classificados como Despesa.
+    view_recomendada: vw_resultado_mensal
+    regra: SUM(valor_realizado) WHERE grupo = 'Despesa'
+
+  resultado:
+    descricao: Receita realizada menos despesa realizada.
+    view_recomendada: vw_resultado_mensal
+    regra: SUM(CASE WHEN grupo = 'Receita' THEN valor_realizado ELSE -valor_realizado END)
+
+  orcado:
+    descricao: Soma dos valores orcados.
+    view_recomendada: vw_realizado_vs_orcado
+    regra: SUM(valor_orcado)
+
+  variacao_orcamento:
+    descricao: Diferenca entre valor realizado e valor orcado.
+    view_recomendada: vw_realizado_vs_orcado
+    regra: SUM(variacao_valor)
+
+sinonimos_negocio:
+  receita_realizada:
+    - faturamento
+    - entrada
+    - receita
+    - valor que entrou
+  despesa_realizada:
+    - gasto
+    - custo
+    - despesa
+    - valor gasto
+  centro_custo:
+    - area
+    - setor
+    - departamento
+  fornecedor:
+    - parceiro
+    - prestador
+    - fornecedor
+  variacao_orcamento:
+    - estourou
+    - acima do orcado
+    - passou do orcamento
+  ultimo_mes_disponivel:
+    - este mes
+    - mes atual
+    - ultimo mes
+    - agora
+
+perguntas_suportadas:
+  - Qual foi a receita realizada por mes?
+  - Qual foi a despesa realizada por mes?
+  - Qual foi o resultado financeiro por mes?
+  - Qual foi a despesa por centro de custo?
+  - Qual foi o realizado versus orcado por mes?
+  - Quais categorias ficaram acima do orcado?
+  - Quais centros de custo tiveram maior despesa?
+  - Quais fornecedores tiveram maior gasto?
+  - Compare receita e despesa no periodo.
+  - Qual unidade teve maior despesa?
